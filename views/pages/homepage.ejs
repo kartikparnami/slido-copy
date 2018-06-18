@@ -1,0 +1,22 @@
+<div id="homepage" v-cloak>
+  <div class="about-wrapper">
+    <div class="container">
+      <h1 class="text-center">Enter event code</h1>
+      <div class="enter-event-container">
+        <hr/>
+        <ajax-form action="eventEnter" :syncing.sync="syncing" :cloud-error.sync="cloudError" :form-data="formData" :form-rules="formRules" :form-errors.sync="formErrors" @submitted="submittedForm()">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Event code" :class="[formErrors.eventCode ? 'is-invalid' : '']" v-model.trim="formData.eventCode" focus-first>
+            <div class="invalid-feedback" v-if="formErrors.eventCode">Please provide a valid event code.</div>
+          </div>
+          <p class="text-danger" v-if="cloudError==='expiredEventCode'"><small>The event code you entered is not active anymore. Please check your event code and try again.</small></p>
+          <p class="text-danger" v-if="cloudError==='badEventCode'"><small>The event code you entered is not correct. Please check your event code and try again.</small></p>
+          <div class="form-group">
+            <ajax-button :syncing="syncing" class="btn-dark btn-lg btn-block">Enter</ajax-button>
+          </div>
+        </ajax-form>
+      </div>
+    </div>
+  </div>
+</div>
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

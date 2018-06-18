@@ -1,0 +1,26 @@
+<div id="viewEvents" v-cloak>
+  <div class="container">
+    <div class="col-10 offset-1 p-4 mt-5 mb-5 bg-light" v-for="event in events">
+        <div class="col-12 m-b-5">
+            <div class="col-8 d-inline-block">
+                <b>Event code:</b> {{event.eventCode}}
+            </div>
+            <div class="col-3 d-inline-block">
+                <b>Start:</b>{{(new Date(event.start)).toString()}}<br/>
+                <b>End:</b>{{(new Date(event.end)).toString()}}
+            </div>
+        </div>
+        <div class="col-12 mt-5 mb-5 text-center">
+            <a :href="'/account/view-event-admin/' + event.eventCode">
+                <button class="btn btn-warning">
+                    Open event
+                </button>
+            </a>
+        </div>
+    </div>
+    <div class="col-10 offset-1 p-3 mt-5 mb-5 text-center" v-if="events.length == 0">
+        No event to show yet.
+    </div>
+  </div>
+</div>
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

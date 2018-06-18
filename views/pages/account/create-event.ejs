@@ -1,0 +1,32 @@
+<div id="createEvent" v-cloak>
+  <div class="container" v-if="!cloudSuccess">
+    <h1 class="text-center">Create an event</h1>
+    <div class="signup-form">
+      <p class="text-center">Let's get started! Creating an event is free and only takes a few minutes.</p>
+      <hr/>
+      <ajax-form action="createEvent" :syncing.sync="syncing" :cloud-error.sync="cloudError" :form-data="formData" :form-rules="formRules" :form-errors.sync="formErrors" @submitted="submittedForm()">
+        <div class="form-group">
+          <label for="eventCode">Event code</label>
+          <input class="form-control" id="eventCode" type="text"  :class="[formErrors.eventCode ? 'is-invalid' : '']" v-model.trim="formData.eventCode" placeholder="xxxx-yyyy" focus-first>
+          <div class="invalid-feedback" v-if="formErrors.eventCode">Please enter your event code.</div>
+        </div>
+        <div class="form-group">
+          <label for="start">Start time</label>
+          <input class="form-control" id="start" type="datetime-local" :class="[formErrors.start ? 'is-invalid' : '']" v-model.trim="formData.start" placeholder="dd/mm/yyyy hh:mins AM/PM">
+          <div class="invalid-feedback" v-if="formErrors.start">Please enter a valid start time.</div>
+        </div>
+        <div class="form-group">
+          <label for="end">End time</label>
+          <input class="form-control" id="end" type="datetime-local" :class="[formErrors.end ? 'is-invalid' : '']" v-model.trim="formData.end" placeholder="dd/mm/yyyy hh:mins AM/PM">
+          <div class="invalid-feedback" v-if="formErrors.end">Please enter a valid end time.</div>
+        </div>
+        <p class="text-danger" v-if="cloudError==='eventCodeAlreadyPresent'"><small>It looks like there's already an event with your event code. Please try a different event code.</small></p>
+        <p class="text-danger" v-if="cloudError==='startTimeAfterEndTime'"><small>It looks like the start time is after the end time. Please try a different start time/end time combo.</small></p>
+        <div class="form-group">
+          <ajax-button type="submit" :syncing="syncing" class="btn-dark btn-lg btn-block">Create event</ajax-button>
+        </div>
+      </ajax-form>
+    </div>
+  </div>
+</div>
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

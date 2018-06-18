@@ -1,0 +1,62 @@
+<div id="viewEvent" v-cloak>
+  <div class="container" v-if="event">
+    <h1 class="text-center mt-5 mb-5"><u>{{event.eventCode}}</u></h1>
+    <div class="col-3 offset-8 mt-5 mb-1 bg-light p-3">
+        <p>Sort questions by:</p>
+        <input type="radio" id="popularRadio" value="popular" v-model="sortBy" @change="sortQuestions">
+        <label for="popular">Most popular</label>
+        <br/>
+        <input type="radio" id="createdDescRadio" value="createdDesc" v-model="sortBy" @change="sortQuestions">
+        <label for="createdDesc">Created time (Latest first)</label>
+        <br/>
+        <input type="radio" id="createdAscRadio" value="createdAsc" v-model="sortBy" @change="sortQuestions">
+        <label for="createdAsc">Created time (Earliest first)</label>
+    </div>
+    <div class="col-10 offset-1 p-4 mt-5 mb-5 bg-light" v-for="question in event.questions" v-if="question.isActive">
+        <div class="col-12 m-b-5">
+            <div class="col-8 d-inline-block">
+                <b>Ques:</b> {{question.text}}
+            </div>
+            <div class="col-3 d-inline-block">
+                <b>Likes:</b>{{question.likeCount}}<br/>
+                <b>Dislikes:</b>{{question.dislikeCount}}
+            </div>
+        </div>
+        <div class="col-12 mt-5 mb-5" v-show="shouldShowQuestion[question.id]">
+            <div class="col-3 offset-3 d-inline-block">
+                <ajax-form action="postLike" :form-data="likeData[question.id]" @submitted="postLike()">
+                    <!-- <input :value="question.id" class="d-none" id="questionId" type="number" v-model="likeData.questionId"> -->
+                    <ajax-button type="submit" class="btn btn-success">
+                        Like
+                    </ajax-button>
+                </ajax-form>
+            </div>
+            <div class="col-3 d-inline-block">
+                <ajax-form action="postDislike" :form-data="dislikeData[question.id]" @submitted="postDislike()">
+                    <!-- <input :value="question.id" class="d-none" id="questionId" type="number" v-model="dislikeData.questionId"> -->
+                    <ajax-button type="submit" class="btn btn-danger">
+                        Dislike
+                    </ajax-button>
+                </ajax-form>
+            </div>
+        </div>
+    </div>
+    <div class="col-10 offset-1 p-3 mt-5 mb-5 text-center" v-if="event.questions.length == 0">
+        No questions to show yet.
+    </div>
+    <div class="new-question-form bg-light p-3 mb-5" style="margin-top: 40px;">
+      <p class="text-center"><b>Add new question</b></p>
+      <ajax-form action="viewEvent" :syncing.sync="syncing" :cloud-error.sync="cloudError" :form-data="formData" :form-rules="formRules" :form-errors.sync="formErrors" @submitted="submittedForm()">
+        <div class="form-group text-center px-4">
+          <input class="form-control" id="questionText" type="text"  :class="[formErrors.questionText ? 'is-invalid' : '']" v-model.trim="formData.questionText" placeholder="What is xyz?">
+          <div class="invalid-feedback" v-if="formErrors.questionText">Please enter a valid question.</div>
+        </div>
+        <p class="text-danger" v-if="cloudError==='questionSize'"><small>It looks like the question is too short or too long.</small></p>
+        <div class="form-group text-center">
+          <ajax-button type="submit" class="btn-dark btn">Add question</ajax-button>
+        </div>
+      </ajax-form>
+    </div>
+  </div>
+</div>
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

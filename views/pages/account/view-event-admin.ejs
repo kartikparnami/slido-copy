@@ -1,0 +1,83 @@
+<div id="viewEventAdmin" v-cloak>
+  <div class="container" v-if="event">
+    <h1 class="text-center mt-5 mb-5"><u>{{event.eventCode}}</u></h1>
+    <div class="col-10 offset-1 p-4 mt-5 mb-5 bg-light" style="border: 20px solid gold" v-for="question in event.highlightedQuestions" v-if="question.isActive && highlightedQuestionIds.indexOf(question.id) !== -1">
+        <div class="col-12 m-b-5">
+            <div class="col-8 d-inline-block">
+                <b>Ques:</b> {{question.text}}
+            </div>
+            <div class="col-3 d-inline-block">
+                <b>Likes:</b>{{question.likeCount}}<br/>
+                <b>Dislikes:</b>{{question.dislikeCount}}
+            </div>
+        </div>
+        <div class="col-12 mt-5 mb-5">
+            <div class="col-3 offset-3 d-inline-block text-center">
+                <ajax-form action="deleteQuestion" :form-data="deleteQuestion[question.id]" @submitted="deleteQuestionFunc()">
+                    <ajax-button type="submit" class="btn btn-danger">
+                        Delete
+                    </ajax-button>
+                </ajax-form>
+            </div>
+            <div class="col-3 d-inline-block text-center" v-if="question.isHighlighted">
+                <ajax-form action="unhighlightQuestion" :form-data="unhighlightQuestion[question.id]" @submitted="unhighlightQuestionFunc()">
+                    <ajax-button type="submit" class="btn btn-success">
+                        Un-highlight
+                    </ajax-button>
+                </ajax-form>
+            </div>
+        </div>
+        <div class="col-12 mt-5 mb-5">
+            <div class="col-6 offset-3 d-inline-block text-center">
+                <ajax-form action="editQuestion" :form-data="editQuestion[question.id]" @submitted="editQuestionFunc()">
+                    <ajax-button type="submit" class="btn btn-warning mb-2">
+                        Edit
+                    </ajax-button>
+                    <input class="form-control" id="questionText" type="text" v-model.trim="editQuestion[question.id].questionText" placeholder="What is xyz?">
+                </ajax-form>
+            </div>
+        </div>
+    </div>
+    <div class="col-10 offset-1 p-4 mt-5 mb-5 bg-light" v-for="question in event.questions" v-if="question.isActive && highlightedQuestionIds.indexOf(question.id) === -1">
+        <div class="col-12 m-b-5">
+            <div class="col-8 d-inline-block">
+                <b>Ques:</b> {{question.text}}
+            </div>
+            <div class="col-3 d-inline-block">
+                <b>Likes:</b>{{question.likeCount}}<br/>
+                <b>Dislikes:</b>{{question.dislikeCount}}
+            </div>
+        </div>
+        <div class="col-12 mt-5 mb-5">
+            <div class="col-3 offset-3 d-inline-block text-center">
+                <ajax-form action="deleteQuestion" :form-data="deleteQuestion[question.id]" @submitted="deleteQuestionFunc()">
+                    <ajax-button type="submit" class="btn btn-danger">
+                        Delete
+                    </ajax-button>
+                </ajax-form>
+            </div>
+            <div class="col-3 d-inline-block text-center" v-if="!question.isHighlighted">
+                <ajax-form action="highlightQuestion" :form-data="highlightQuestion[question.id]" @submitted="highlightQuestionFunc()">
+                    <ajax-button type="submit" class="btn btn-success">
+                        Highlight
+                    </ajax-button>
+                </ajax-form>
+            </div>
+        </div>
+        <div class="col-12 mt-5 mb-5">
+            <div class="col-6 offset-3 d-inline-block text-center">
+                <ajax-form action="editQuestion" :form-data="editQuestion[question.id]" @submitted="editQuestionFunc()">
+                    <ajax-button type="submit" class="btn btn-warning mb-2">
+                        Edit
+                    </ajax-button>
+                    <input class="form-control" id="questionText" type="text" v-model.trim="editQuestion[question.id].questionText" placeholder="What is xyz?">
+                </ajax-form>
+            </div>
+        </div>
+    </div>
+    <div class="col-10 offset-1 p-3 mt-5 mb-5 text-center" v-if="event.questions.length == 0">
+        No questions to show yet.
+    </div>
+  </div>
+</div>
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
